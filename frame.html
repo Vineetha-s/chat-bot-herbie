@@ -1,0 +1,417 @@
+<!doctype html>
+<html>
+<head>
+    <title>BotMan Widget</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="test.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background-color: white;
+        }
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            position: absolute;
+            bottom: 0;
+            background-color: #fff;
+            border-top: 1px solid #ccc;
+            margin-top:100px;
+        }
+        input {
+            flex: 1;
+            padding: 10px;
+            font-family: Roboto;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 16.8px;
+            letter-spacing: 0.01em;
+            text-align: left;
+            border: none;
+        }
+        .send-button {
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+        }
+        .send-button img {
+            width: 20px;
+            height: 20px;
+        }
+        .send-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .chat-message-herbie {
+            width: fit-content;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 5px;
+            align-self: flex-start;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .chat-message-herbie .message-column {
+            flex: 1;
+            max-width: 100%; /* Adjust max-width as needed */
+            word-wrap: break-word;
+            height:100%;
+        }
+        .chat-message-user {
+            width: fit-content;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 5px;
+            align-self: flex-end;
+        }
+        .icon-column {
+            width: 30px;
+            margin-right: 10px;
+        }
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: rgba(110, 168, 254, 1);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+        }
+        .message-content {
+            /* max-width: 70%;  */
+            word-wrap: break-word;
+            background-color: #f7c266;
+            height:27px;
+            border-radius:20px;
+            padding-left:20px;
+            padding-top:10px;
+            padding-right:10px;
+            gap:10px;
+            width:100%;
+            height:100%;
+            margin-left: 10px;
+        }
+        .message-column {
+            flex: 1;
+            background-color: #f4f4f4;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 10px;
+            height: 10px;
+            animation: spin 2s linear infinite;
+            margin-top: 5px;
+            align-self: center;
+            margin-bottom:100px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        input:disabled {
+            background-color: #e0e0e0;
+        }
+        .product-details-wrapper {
+            margin-top: 10px; 
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+        .product-details {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .product-price-qty {
+            display:flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+        .bottomline {
+            border-bottom: 1px solid rgba(117, 194, 164, 1); 
+            margin-bottom: 40px; 
+            margin-top: 35px!important; 
+        }
+        .product-listing-background {
+            background-color: #f7f7f7; 
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        .product-background {
+            background-color: white;
+            border-radius:20px;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .btnCart {
+            background-color:rgba(247, 194, 102, 1);
+            border: none;
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 16px;
+            text-align: center;
+            color:rgba(68, 68, 68, 1);
+            width: 298px !important;
+            height: 35px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btnContainer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .product-name-head {
+            font-family: Inter;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 19.36px;
+            letter-spacing: 0.01em;
+            text-align: left;
+            color: rgba(65, 132, 106, 1);
+        }
+        .product-feelings {
+            font-family: Inter;
+            font-size: 14px;
+            font-style: italic;
+            font-weight: 400;
+            line-height: 31.5px;
+            letter-spacing: 0.01em;
+            text-align: left;
+        }
+        .product-name {
+            font-family: Open Sans;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 21.79px;
+            text-align: left;
+        }
+        .product-type {
+            font-family: Open Sans;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 19.07px;
+            text-align: left;
+            color:rgba(161, 161, 161, 1);
+        }
+        .product-price {
+            font-family: Open Sans;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 27.24px;
+            text-align: left;
+            width:50px;
+            margin-right: 30px;
+        }
+        .product-quantity {
+            width: 100px;
+            height: 28px;
+            padding: 10px;
+            gap: 6px;
+            border-radius: 20px;
+            border: 1px solid rgba(247, 194, 102, 1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-left: 20px;
+        }
+        .product-quantity label,
+        .product-quantity input,
+        .product-quantity .product-plus {
+            display: flex;
+            align-items: center;
+        }
+        .product-quantity input {
+            text-align: center;
+            width: 30px;
+            border: none;
+        }
+        .product-radiobutton {
+            margin-top: 20px;
+            display:flex;
+        }
+        .product-list {
+            font-family: Inter;
+            font-size: 16px!important;
+            font-weight: 500!important;
+            line-height: 24px!important;
+            letter-spacing: -0.011em;
+            text-align: left;
+        }
+        
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+</head>
+<body>
+    <div class="chat-body" id="chat-body"></div>
+    <div class="input-container">
+        <input type="text" id="input-holder" placeholder="Type a message..."/>
+        <button class="send-button" id="send-btn">
+            <img src="send.png">
+        </button>
+    </div>
+</body>
+<script>
+    let dummy_message = [{
+        message: "Hi there"
+    }, {
+        message: "How can I help you today?"
+    }];
+    dummy_message.map((data) => {
+        document.getElementById("chat-body").innerHTML += `
+            <div class="chat-message-herbie">
+                <div class="icon-column">
+                    <img src="herbieicon.png" width="30" height="30" alt="Herbie Icon">
+                </div>
+                <div class="message-column">
+                    <div class="chat-body">${data.message}</div>
+                </div>
+            </div>
+        `;
+    });
+    document.getElementById("input-holder").addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !document.getElementById("send-btn").disabled) {
+            sendMessage();
+        }
+    });
+    document.getElementById("send-btn").addEventListener("click", () => {
+        if (!document.getElementById("send-btn").disabled) {
+            sendMessage();
+        }
+    });
+    
+    function sendMessage() {
+        let input_data = document.getElementById("input-holder").value;
+        if (!input_data.trim()) return; // Prevent sending empty messages
+        dummy_message.push({ message: input_data });
+        document.getElementById("chat-body").innerHTML += `
+            <div class="chat-message-user" style="margin-bottom:50px; display: flex; align-items: center;">
+                <div class="message-content">${input_data}</div>
+                <div class="user-avatar">F</div>
+            </div>
+        `;
+        scrollToBottom();
+        const loadingSpinner = document.createElement('div');
+        loadingSpinner.className = 'loading-spinner';
+        loadingSpinner.id = 'loading-spinner';
+        document.getElementById("input-holder").disabled = true;
+        document.getElementById("send-btn").disabled = true;
+        document.getElementById("chat-body").appendChild(loadingSpinner);
+        scrollToBottom();
+        fetch('https://askherbie-api-dev.iamherbie.com/askherbie/MoEaskherbie', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ question: input_data, retailer_id: 1 }),
+            mode: 'cors'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data.response);
+            var retailersProduct = data.retailer_products
+            var converter = new showdown.Converter();
+            var htmlContent = converter.makeHtml(data.response);
+            document.getElementById("loading-spinner").remove();
+            document.getElementById("chat-body").innerHTML += `
+                <div class="chat-message-herbie">
+                    <div class="icon-column">
+                        <img src="herbieicon.png" width="30" height="30" alt="Herbie Icon">
+                    </div>
+                    <div class="message-column" style="margin-bottom:50px">
+                        <div class="chat-body" >${htmlContent}</div>
+                    </div>
+                </div>
+            `;
+            
+            let productDetailsHtml = '<div class="product-details-wrapper product-listing-background"><div class=product-list>List of products:</div>';
+            retailersProduct.forEach(product => {
+                productDetailsHtml += `
+                    <div>
+                        <div class="product-name-head">${product.Name}</div>
+                        <div class="product-feelings">${product.Feelings}</div>
+                        <div class="product-background">
+                            <img src="${product['Image URL']}" alt="Product Image" style="width: 250px; height: 145px;">
+                            <div class="product-name">${product.Name}</div>
+                            <div class="product-type"><span>Type:</span> ${product['Strain Type']}</div>
+                            <div class="product-price-qty">
+                                <div class="product-price">$${product.Price}</div>
+                                <div>Qty:</div>
+                                <div class="product-quantity">
+                                    <label>-</label>
+                                    <input type="text" value="1">
+                                    <label class="product-plus">+</label>
+                                </div>
+                            </div>
+                            <div class="product-radiobutton">
+                                <div class="radio-button">
+                                    <input type="radio" name="quantity" value="1" checked>
+                                    <label for="quantity">Store Pickup</label>
+                                </div>
+                                <div class="radio-button">
+                                    <input type="radio" name="quantity" value="2">
+                                    <label for="quantity">Delivery</label>
+                                </div>
+                            </div>
+                            <div class="btnContainer">
+                                <button class="btnCart">Add to Cart</button>
+                            </div>
+                        </div>
+                        <div class="bottomline"/>
+                    </div>
+                `;
+            });
+            productDetailsHtml += '</div>';
+            document.getElementById("chat-body").innerHTML += productDetailsHtml;
+            document.getElementById("input-holder").value = ""; 
+            document.getElementById("input-holder").disabled = false;
+            document.getElementById("send-btn").disabled = false;
+            scrollToBottom();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Remove loading spinner in case of error
+            document.getElementById("loading-spinner").remove();
+            document.getElementById("input-holder").disabled = false;
+            document.getElementById("send-btn").disabled = false;
+        });
+    }
+    function scrollToBottom() {
+        const chatBody = document.getElementById("chat-body");
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+</script>
+</html>
